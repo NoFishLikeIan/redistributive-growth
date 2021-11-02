@@ -20,7 +20,7 @@ class Model:
 
         return m.pow(tangible, eta) * m.pow(intangible, 1 - eta)
 
-    def K_prime(self, H, K, eta):
+    def Ks(self, H, K, eta):
         alpha = self.alpha
         output = self.Y(H, K, eta)
 
@@ -28,12 +28,9 @@ class Model:
 
         return (output_adj * output * (1 - alpha)) / (output_adj + 1)
 
-    def intangible(self, H, K, eta):
+    def Hs(self, H, K, eta):
         beta = self.beta
         alpha = self.alpha
         output = self.Y(H, K, eta)
 
         return m.sqrt(alpha * beta * eta * output) / beta
-
-    def equilibrium(self, H, K, eta, p):
-        return (1 - self.alpha) - (p + K)*self.Y(H, K, eta)
