@@ -1,9 +1,10 @@
 import scipy.optimize as opt
+import numpy as np
 
 from model import Model
 
 
-def get_eta(model: Model, Y: float, H: float, K: float) -> float:
+def get_eta(m: Model, Y: float, H: float, K: float) -> float:
     """
     Numerically computes `eta` based on a `model` instance and a value of `Y`, `K` and, `H`. 
 
@@ -11,11 +12,15 @@ def get_eta(model: Model, Y: float, H: float, K: float) -> float:
     """
 
     def equilibrium(eta):
+        deltaY = Y - m.Y(H, K, eta)
+        deltaK = K - m.Ks(H, K, eta)
+        deltaH = H - m.Hs(H, K, eta)
 
-        deltaY = Y - model.Y(H, K, eta)
-        deltaK = K - model.Ks(H, K, eta)
-        deltaH = H - model.Hs(H, K, eta)
+        return np.square(deltaY + deltaH + deltaK)
 
-        return deltaY + deltaH + deltaK
+    result = opt.minimize(equilibrium, 0.5, bounds=((0., 1.), ))
 
-    return opt.newton(equilibrium, )
+    sol = result.x[0]
+    error = result.fun
+
+    return sol, error
