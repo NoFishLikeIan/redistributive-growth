@@ -1,1 +1,1 @@
-print("Get started!")
+from .model import Model
