@@ -1,5 +1,9 @@
-# To do
+## Redistributive Growth calibration
 
-- Find parametrization (combination of taking previous one and thesis one)
-- Find US data for `K, l, h, Y, ϕ`
-- Write equation conditions as `g(η) = 0`
+Attempt at calibrating [Döttling and Perotti, 2019](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3464511).
+
+Currently working on:
+
+- More precise definition of equlibria
+- Retrieving data from FRED-md on macro variables
+- Rewriting model to match moments
