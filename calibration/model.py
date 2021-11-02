@@ -11,7 +11,7 @@ class Model:
         self.h = h
         self.l = l
 
-    @lru_cache(maxsize=1)  # What is the best maxsize?
+    #  add later for optimization @lru_cache(maxsize=1)  # What is the best maxsize?
     def Y(self, H, K, eta):
         alpha = self.alpha
 
