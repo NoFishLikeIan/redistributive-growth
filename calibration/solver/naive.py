@@ -1,6 +1,6 @@
 import scipy.optimize as opt
 
-from .model import Model
+from model import Model
 
 
 def get_eta(model: Model, Y: float, H: float, K: float) -> float:
