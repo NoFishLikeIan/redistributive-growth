@@ -29,8 +29,9 @@ if __name__ == "__main__":
     etas = []
     errors = []
 
-    for _, f in data.iterrows():
+    for i, f in data.iterrows():
         # FIXME: is it constant?
+        print(f"Working on year: {i}")    
         m = Model(alpha=0.4, beta=1, phi=f.phi, h=f.h, l=f.l)
 
         eta, error = naive.get_eta(m, f.Y, f.H, f.K)
