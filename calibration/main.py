@@ -31,8 +31,8 @@ if __name__ == "__main__":
 
     for i, f in data.iterrows():
         # FIXME: is it constant?
-        print(f"Working on year: {i}")    
-        m = Model(alpha=0.4, beta=1, phi=f.phi, h=f.h, l=f.l)
+        print(f"Working on year: {i} \r")    
+        m = Model(alpha=f.alpha, beta=1, phi=f.phi, h=f.h, l=f.l)
 
         eta, error = naive.get_eta(m, f.Y, f.H, f.K)
 
@@ -44,6 +44,9 @@ if __name__ == "__main__":
     errors = np.array(errors)
 
     years = [pd.to_datetime(s).year for s in data.sasdate]
+
+    etas_norm = [eta / etas[0] for eta in etas]
+    alpha_norm = [alpha / data.alpha[0] for alpha in data.alpha]
    
     fig, ax_eta = plt.subplots()
     ax_eta.set_title(r'Solution to $\eta$')
@@ -51,14 +54,14 @@ if __name__ == "__main__":
     ax_eta.set_xticks(years)
 
     color = 'tab:red'
-    ax_eta.plot(years, etas, color = color)
+    ax_eta.plot(years, etas_norm, color = color)
     ax_eta.set_ylabel(r'$\eta$', color = color)
 
-    ax_phi = ax_eta.twinx()
+   # ax_phi = ax_eta.twinx()
     
     color = 'tab:blue'
-    ax_phi.plot(years, data.phi, color = color)
-    ax_phi.set_ylabel(r'$\phi$', color = color)
+    ax_eta.plot(years, alpha_norm, color = color)
+    # ax_phi.set_ylabel(r'$\alpha$', color = color)
 
     fig.tight_layout()
     fig.savefig(os.path.join(plot_path, "naive_sol_eta.png"))
