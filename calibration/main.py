@@ -23,45 +23,39 @@ from dotenv import load_dotenv
 load_dotenv()
 plot_path = os.environ.get("PLOT_PATH", ".")
 
+def estimate_data(data, verbose = False, beta = None):
+    compute_beta = beta is None
+
+    N = len(data)
+    params = 2 if compute_beta else 1
+
+    parameters = np.empty((N, params))
+    errors = np.empty((N,))
+
+    for i, f in data.iterrows():    
+        if verbose: print(f"Working on year: {f.sasdate} \r")    
+        
+        m = Model(alpha=f.alpha, phi=f.phi, h=f.h, l=f.l)
+
+        if compute_beta:
+            params, error = naive.get_parameters(m, f.Y, f.H, f.K)
+            parameters[i, :] = params
+        else:
+            params, error = naive.get_eta(m, f.Y, f.H, f.K, beta = beta)
+            parameters[i] = params
+
+        errors[i] = error
+
+    cols = ["eta", "beta"] if compute_beta else ["eta"]
+    result = pd.DataFrame(parameters, columns = cols, index = data.sasdate)
+    result["errors"] = errors
+
+    return result
+
 if __name__ == "__main__":
     data = pd.read_csv("data/calibration_data.csv")
+    data.sasdate = data.sasdate.apply(pd.to_datetime)
 
-    etas = []
-    errors = []
+    results = estimate_data(data)
+    print(results)
 
-    for i, f in data.iterrows():
-        # FIXME: is it constant?
-        print(f"Working on year: {i} \r")    
-        m = Model(alpha=f.alpha, beta=1, phi=f.phi, h=f.h, l=f.l)
-
-        eta, error = naive.get_eta(m, f.Y, f.H, f.K)
-
-        etas.append(eta)
-        errors.append(error[0])
-
-
-    etas = np.array(etas)
-    errors = np.array(errors)
-
-    years = [pd.to_datetime(s).year for s in data.sasdate]
-
-    etas_norm = [eta / etas[0] for eta in etas]
-    alpha_norm = [alpha / data.alpha[0] for alpha in data.alpha]
-   
-    fig, ax_eta = plt.subplots()
-    ax_eta.set_title(r'Solution to $\eta$')
-    ax_eta.set_xlabel('Time')
-    ax_eta.set_xticks(years)
-
-    color = 'tab:red'
-    ax_eta.plot(years, etas_norm, color = color)
-    ax_eta.set_ylabel(r'$\eta$', color = color)
-
-   # ax_phi = ax_eta.twinx()
-    
-    color = 'tab:blue'
-    ax_eta.plot(years, alpha_norm, color = color)
-    # ax_phi.set_ylabel(r'$\alpha$', color = color)
-
-    fig.tight_layout()
-    fig.savefig(os.path.join(plot_path, "naive_sol_eta.png"))
