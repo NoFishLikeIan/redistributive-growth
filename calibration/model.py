@@ -4,10 +4,10 @@ from functools import lru_cache
 
 
 class Model:
-    def __init__(self, alpha, beta, phi, h, l):
+    def __init__(self, alpha, phi, h, l):
         self.alpha = alpha
-        self.beta = beta
         self.phi = phi
+        
         self.h = h
         self.l = l
 
@@ -28,8 +28,7 @@ class Model:
 
         return (output_adj * output * (1 - alpha)) / (output_adj + 1)
 
-    def Hs(self, H, K, eta):
-        beta = self.beta
+    def Hs(self, H, K, eta, beta):
         alpha = self.alpha
         output = self.Y(H, K, eta)
 
