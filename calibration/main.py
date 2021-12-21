@@ -1,20 +1,10 @@
 from solver import naive
 from model import Model
-
+from plot import plotresults
 
 import numpy as np
 import pandas as pd
-
-# Plotting
-
-import matplotlib
 import matplotlib.pyplot as plt
-matplotlib.rcParams['text.usetex'] = True
-matplotlib.rcParams['figure.figsize'] = (12, 9)
-matplotlib.rcParams['figure.dpi'] = 200
-
-import seaborn as sns
-sns.set()
 
 # Environment
 
@@ -57,5 +47,8 @@ if __name__ == "__main__":
     data.sasdate = data.sasdate.apply(pd.to_datetime)
 
     results = estimate_data(data)
-    print(results)
+    figure = plotresults(results)
+    
+    figure.savefig(os.path.join(plot_path, "naive_solve.png"))
+    
 
