@@ -16,7 +16,7 @@ def plotresults(results:DataFrame):
     years = [date.year for date in results.index]
 
     fig, ax_eta = plt.subplots()
-    ax_eta.set_title(r'Solution to $\eta$')
+    ax_eta.set_title(r'Calibration of $\eta$ and $\beta$')
     ax_eta.set_xlabel('Time')
     ax_eta.set_xticks(years)
 
