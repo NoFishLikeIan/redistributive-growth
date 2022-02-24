@@ -142,3 +142,4 @@ cython_debug/
 prev_calibration
 docs
 .vscode
+.DS_Store
